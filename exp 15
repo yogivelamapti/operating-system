@@ -1,0 +1,21 @@
+def sequential_file_allocation(total_blocks, allocated, start, length):
+    # Check availability
+    for i in range(start, start + length):
+        if i >= total_blocks or allocated[i] == 1:
+            print("Cannot allocate! Space is not available.")
+            return
+
+    # Allocate blocks
+    for i in range(start, start + length):
+        allocated[i] = 1
+
+    print("File allocated successfully!")
+    print("Allocated Blocks:", list(range(start, start + length)))
+
+
+# Example usage
+total_blocks = 20
+allocated = [0] * total_blocks  # 0 = free, 1 = allocated
+
+# Allocate a sample file
+sequential_file_allocation(total_blocks, allocated, start=5, length=4)
