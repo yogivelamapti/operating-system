@@ -1,40 +1,42 @@
 #include <stdio.h>
-#include <sys/ipc.h>
-#include <sys/shm.h>
+#include <unistd.h>
 #include <string.h>
 
 int main() {
-    key_t key = ftok("shmfile", 65);
-    int shmid = shmget(key, 1024, 0666 | IPC_CREAT);
-    char *str = (char*) shmat(shmid, NULL, 0);
+    int fd[2]; // fd[0] - read end, fd[1] - write end
+    pid_t pid;
+    char write_msg[] = "Hello from parent!";
+    char read_msg[100];
 
-    printf("Write data: ");
-    fgets(str, 100, stdin);
+    // Create the pipe
+    if (pipe(fd) == -1) {
+        perror("Pipe failed");
+        return 1;
+    }
 
-    printf("Data written in memory: %s\n", str);
+    pid = fork(); // Create a child process
 
-    shmdt(str);
+    if (pid < 0) {
+        perror("Fork failed");
+        return 1;
+    }
+
+    if (pid > 0) { // Parent process
+        close(fd[0]); // Close unused read end
+        write(fd[1], write_msg, strlen(write_msg) + 1); // Write to pipe
+        close(fd[1]); // Close write end after writing
+    } else { // Child process
+        close(fd[1]); // Close unused write end
+        read(fd[0], read_msg, sizeof(read_msg)); // Read from pipe
+        printf("Child received message: %s\n", read_msg);
+        close(fd[0]); // Close read end
+    }
+
     return 0;
 }
 
-OUTPUT 
-Write data: JOHN
-Data written in memory: JOHN
 
-#include <stdio.h>
-#include <sys/ipc.h>
-#include <sys/shm.h>
 
-int main() {
-    key_t key = ftok("shmfile", 65);
-    int shmid = shmget(key, 1024, 0666);
-    char *str = (char*) shmat(shmid, NULL, 0);
 
-    printf("Data read from memory: %s\n", str);
-
-    shmdt(str);
-    shmctl(shmid, IPC_RMID, NULL); // delete shared memory
-    return 0;
-}
- OUTPUT
-Data read from memory: JOHN
+#output
+Child received message: Hello from parent!
