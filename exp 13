@@ -1,0 +1,35 @@
+
+def lru_page_replacement(ref_string, frame_count):
+    frames = []
+    page_faults = 0
+
+    print("Page\tFrames")
+
+    for i, page in enumerate(ref_string):
+
+        # If page is already in frames â†’ update its recent use
+        if page in frames:
+            frames.remove(page)
+            frames.append(page)
+
+        else:
+            # Page Fault
+            page_faults += 1
+
+            if len(frames) < frame_count:
+                frames.append(page)
+            else:
+                # Remove the LRU page (first in list = least recently used)
+                frames.pop(0)
+                frames.append(page)
+
+        print(f"{page}\t{frames}")
+
+    print("\nTotal Page Faults:", page_faults)
+
+
+# Example reference string
+reference = [1, 2, 3, 4, 2, 1, 5, 2, 4, 6]
+frames = 3
+
+lru_page_replacement(reference, frames)
