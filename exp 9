@@ -36,4 +36,15 @@ int main() {
 }
 
 OUTPUT
-Safe Sequence: P1 P3 P4 P0 P2 
+Number of processes: 3
+Number of resources: 3
+Allocation Matrix:
+0 1 0
+2 0 0
+3 0 2
+Max Matrix:
+7 5 3
+3 2 2
+9 0 2
+Available Resources:
+3 3 2
