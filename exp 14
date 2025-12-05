@@ -1,0 +1,38 @@
+def optimal_page_replacement(ref_string, frames_count):
+    frames = []
+    page_faults = 0
+
+    for i in range(len(ref_string)):
+        page = ref_string[i]
+
+        # If page already in frames
+        if page in frames:
+            continue
+
+        # If empty space in frames
+        if len(frames) < frames_count:
+            frames.append(page)
+            page_faults += 1
+        else:
+            # Find which page to replace
+            future_use = []
+            for f in frames:
+                if f in ref_string[i+1:]:
+                    future_use.append(ref_string[i+1:].index(f))
+                else:
+                    future_use.append(float('inf'))
+
+            index_to_replace = future_use.index(max(future_use))
+            frames[index_to_replace] = page
+            page_faults += 1
+
+        print("Frames:", frames)
+
+    print("\nTotal Page Faults:", page_faults)
+
+
+# Sample Input
+ref_string = [7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3]
+frames_count = 3
+
+optimal_page_replacement(ref_string, frames_count)
