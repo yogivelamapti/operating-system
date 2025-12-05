@@ -1,47 +1,27 @@
 #include <stdio.h>
 #include <pthread.h>
-#include <semaphore.h>
 
-sem_t empty, full;
-int item = 0;
-
-void* producer() {
-    for(int i=1;i<=5;i++) {
-        sem_wait(&empty);
-        item=i;
-        printf("Produced: %d\n", item);
-        sem_post(&full);
-    }
-}
-
-void* consumer() {
-    for(int i=1;i<=5;i++) {
-        sem_wait(&full);
-        printf("Consumed: %d\n", item);
-        sem_post(&empty);
-    }
+void* print_message(void* arg) {
+    char* message = (char*)arg;
+    printf("%s\n", message);
+    return NULL;
 }
 
 int main() {
-    pthread_t p,c;
-    sem_init(&empty,0,1);
-    sem_init(&full,0,0);
+    pthread_t thread1, thread2;
 
-    pthread_create(&p,NULL,producer,NULL);
-    pthread_create(&c,NULL,consumer,NULL);
+    // Create threads
+    pthread_create(&thread1, NULL, print_message, "Hello from Thread 1");
+    pthread_create(&thread2, NULL, print_message, "Hello from Thread 2");
 
-    pthread_join(p,NULL);
-    pthread_join(c,NULL);
+    // Wait for threads to finish
+    pthread_join(thread1, NULL);
+    pthread_join(thread2, NULL);
+
+    printf("Main thread finished.\n");
     return 0;
 }
-OUTPUT 
-Produced: 1
-Consumed: 1
-Produced: 2
-Consumed: 2
-Produced: 3
-Consumed: 3
-Produced: 4
-Consumed: 4
-Produced: 5
-Consumed: 5
+
+
+#output
+final counter = 200000
