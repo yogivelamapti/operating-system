@@ -1,0 +1,36 @@
+#include <stdio.h>
+
+int main() {
+    int b, p, bs[50], ps[50], alloc[50];
+    
+    scanf("%d", &b);
+    for(int i=0;i<b;i++) scanf("%d", &bs[i]);
+
+    scanf("%d", &p);
+    for(int i=0;i<p;i++) scanf("%d", &ps[i]), alloc[i] = -1;
+
+    for(int i=0;i<p;i++)
+        for(int j=0;j<b;j++)
+            if(bs[j] >= ps[i]) { alloc[i] = j; bs[j] -= ps[i]; break; }
+
+    for(int i=0;i<p;i++)
+        if(alloc[i] != -1) 
+            printf("P%d (%d) -> B%d\n", i+1, ps[i], alloc[i]+1);
+        else 
+            printf("P%d (%d) -> Not Allocated\n", i+1, ps[i]);
+}
+
+#INPUT
+Blocks: 5
+Sizes: 100 500 200 300 600
+
+Processes: 4
+Sizes: 212 417 112 426
+
+
+#OUTPUT
+Process Size Block
+P1      212   B2
+P2      417   B5
+P3      112   B2
+P4      426   Not Allocated
