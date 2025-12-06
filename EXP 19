@@ -1,0 +1,60 @@
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char u[10][20],f[10][10][20],n[20]; 
+int uc=0, uf[10]={0}, c,x,i;
+    while(scanf("%d",&c)){
+        if(c==1) scanf("%s",u[uc]),
+printf("User Created\n"), uc++;
+        else if(c==2){ 
+scanf("%d%s",&x,n);
+for(i=0;i<uf[x];i++)
+if(!strcmp(f[x][i],n)) break;
+                       if(i<uf[x]) printf("Exists\n");
+else strcpy(f[x][uf[x]++],n), printf("Created\n"); }
+        else if(c==3){
+scanf("%d%s",&x,n); 
+for(i=0;i<uf[x];i++) if(!strcmp(f[x][i],n)) break;
+                       printf(i<uf[x]?"Found\n":"Not Found\n"); }
+        else if(c==4) for(i=0;i<uc;i++){ 
+printf("%s:\n",u[i]); for(int j=0;j<uf[i];j++) 
+printf("%s\n",f[i][j]); }
+        else break;
+    }
+}
+#INPUT
+
+1
+Alice
+1
+Bob
+2
+0
+file1
+2
+0
+file2
+2
+1
+data
+3
+0
+file1
+4
+5
+
+#OUTPUT
+User created
+User created
+File created
+File created
+File created
+Found
+
+User Alice:
+file1
+file2
+
+User Bob:
+data
