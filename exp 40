@@ -1,0 +1,42 @@
+#include <stdio.h>
+
+struct File {
+    char name[20];
+    int owner;      // 0 = owner, 1 = group, 2 = others
+    int permOwner;  // rwx = 1/0 bits
+    int permGroup;
+    int permOthers;
+};
+
+int main() {
+    struct File f;
+    int userType, action;
+
+    printf("Enter file name: ");
+    scanf("%s", f.name);
+
+    printf("Enter owner permission (r=4 w=2 x=1): ");
+    scanf("%d", &f.permOwner);
+
+    printf("Enter group permission (r=4 w=2 x=1): ");
+    scanf("%d", &f.permGroup);
+
+    printf("Enter others permission (r=4 w=2 x=1): ");
+    scanf("%d", &f.permOthers);
+
+    printf("\nEnter user type (0=owner, 1=group, 2=others): ");
+    scanf("%d", &userType);
+
+    printf("Enter action (4=read, 2=write, 1=execute): ");
+    scanf("%d", &action);
+
+    int perm = (userType == 0) ? f.permOwner :
+               (userType == 1) ? f.permGroup : f.permOthers;
+
+    if (perm & action)
+        printf("\nAccess GRANTED!\n");
+    else
+        printf("\nAccess DENIED.\n");
+
+    return 0;
+}
